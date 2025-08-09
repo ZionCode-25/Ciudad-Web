@@ -1065,9 +1065,13 @@ function loadLevel(i) {
   `;
 
   cm.setValue(level.initialCode);
-  preview.innerHTML = "";
   messageEl.textContent = "";
   updateProgress();
+
+  // Renderizar la vista previa después de un pequeño delay para asegurar que el iframe esté listo
+  setTimeout(() => {
+    renderPreview();
+  }, 100);
   highlightLevelList();
 }
 
@@ -1116,7 +1120,7 @@ function showCompletion() {
   cm.setValue(
     "<!-- ¡Felicidades! -->\n<h1>Ciudad completada 🏆</h1>\n<p>Vuelve a practicar los niveles que quieras.</p>"
   );
-  preview.innerHTML = cm.getValue();
+  renderPreview();
   messageEl.textContent = "¡Juego completado!";
   messageEl.style.color = "#7dd3fc";
   progressBar.style.width = "100%";
@@ -1131,7 +1135,89 @@ function showCompletion() {
 // render preview
 function renderPreview() {
   const code = cm.getValue();
-  preview.innerHTML = code;
+
+  // Crear documento HTML completo para el iframe
+  const iframeDoc = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+        body {
+          margin: 0;
+          padding: 14px;
+          font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+          line-height: 1.6;
+          color: #333;
+          background: white;
+        }
+        * {
+          box-sizing: border-box;
+        }
+        /* Estilos base para elementos comunes */
+        h1, h2, h3, h4, h5, h6 {
+          margin-top: 0;
+          margin-bottom: 0.5em;
+        }
+        p {
+          margin-top: 0;
+          margin-bottom: 1em;
+        }
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+        table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+        th, td {
+          border: 1px solid #ddd;
+          padding: 8px;
+          text-align: left;
+        }
+        th {
+          background-color: #f2f2f2;
+        }
+        input, button {
+          padding: 8px;
+          margin: 4px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+        }
+        button {
+          background-color: #007bff;
+          color: white;
+          cursor: pointer;
+        }
+        button:hover {
+          background-color: #0056b3;
+        }
+        ul, ol {
+          padding-left: 20px;
+        }
+        a {
+          color: #007bff;
+          text-decoration: none;
+        }
+        a:hover {
+          text-decoration: underline;
+        }
+      </style>
+    </head>
+    <body>
+      ${code}
+    </body>
+    </html>
+  `;
+
+  // Escribir el contenido en el iframe
+  const iframeDocument =
+    preview.contentDocument || preview.contentWindow.document;
+  iframeDocument.open();
+  iframeDocument.write(iframeDoc);
+  iframeDocument.close();
 }
 
 // comprobación del nivel actual
