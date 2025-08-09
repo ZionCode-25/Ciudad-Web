@@ -126,7 +126,6 @@ Ciudad-Web/
 ├── style.css           # Estilos y diseño responsive
 ├── script.js           # Lógica del juego y funcionalidades
 ├── README.md           # Documentación del proyecto
-├── DEPLOY.md           # Guía de despliegue
 ├── .gitignore          # Archivos ignorados por Git
 └── docs/
     └── CNAME           # Configuración de dominio personalizado
