@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Construye tu Ciudad Web — Juego</title>
+
+    <!-- CodeMirror 5 (editor) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/codemirror.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/theme/dracula.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/addon/edit/closetag.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/addon/edit/matchbrackets.min.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <h1>🏙️ Ciudad Web</h1>
+        <small>Aprende HTML & CSS — modo juego</small>
+      </div>
+
+      <nav class="top-controls">
+        <div class="progress-wrap">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+        <div class="level-indicator">
+          Nivel <span id="level-num">1</span>/<span id="level-total">1</span>
+        </div>
+        <button id="reset-btn" class="btn secondary" type="button">
+          Reiniciar
+        </button>
+      </nav>
+    </header>
+
+    <main class="app-grid">
+      <!-- Left: instrucciones y lista de niveles -->
+      <aside class="panel left">
+        <div class="panel-header">
+          <h2 id="level-title">Nivel</h2>
+          <div class="level-tags" id="level-tags"></div>
+        </div>
+        <div class="panel-body scroll">
+          <p id="level-instructions"></p>
+
+          <hr />
+
+          <h3>Objetivos</h3>
+          <ul id="level-goals"></ul>
+
+          <hr />
+
+          <h3>Progreso</h3>
+          <ol id="level-list" class="level-list"></ol>
+        </div>
+      </aside>
+
+      <!-- Centro: editor con controles -->
+      <section class="panel center">
+        <div class="editor-toolbar">
+          <div class="editor-actions">
+            <button id="run-btn" class="btn primary" type="button">
+              Vista previa
+            </button>
+            <button id="check-btn" class="btn success" type="button">
+              Comprobar
+            </button>
+            <button id="reset-code-btn" class="btn" type="button">
+              Restablecer código
+            </button>
+            <button id="help-btn" class="btn help" type="button">
+              💡 Ayuda
+            </button>
+          </div>
+          <div class="editor-meta">
+            <label class="small"
+              >Auto-actualizar
+              <input id="autorun" type="checkbox" checked />
+            </label>
+          </div>
+        </div>
+
+        <div id="editor" class="editor-container"></div>
+
+        <div class="editor-footer">
+          <span id="message" class="message"></span>
+          <div class="spacer"></div>
+          <button id="next-btn" class="btn" type="button">
+            Siguiente nivel →
+          </button>
+        </div>
+      </section>
+
+      <!-- Right: vista previa -->
+      <aside class="panel right">
+        <div class="panel-header">
+          <h2>Vista previa</h2>
+        </div>
+        <div
+          id="preview"
+          class="preview-frame scroll"
+          contenteditable="false"
+        ></div>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <!-- Branding Section -->
+        <div class="footer-brand">
+          <div class="brand-logo">
+            <h3>⚡ Zion Code</h3>
+            <p>Aprende programación jugando</p>
+          </div>
+          <div class="social-links">
+            <a
+              href="https://www.tiktok.com/@zioncode_"
+              target="_blank"
+              class="social-link tiktok"
+            >
+              <span class="social-icon">🎵</span>
+              @zioncode_
+            </a>
+          </div>
+        </div>
+
+        <!-- Share Section -->
+        <div class="footer-share" id="share-section" style="display: none">
+          <h4>🎉 ¡Felicitaciones! Completaste el juego</h4>
+          <p>Comparte tu logro e invita a otros a intentarlo:</p>
+          <div class="share-buttons">
+            <button class="share-btn whatsapp" onclick="shareToWhatsApp()">
+              <span class="share-icon">📱</span>
+              WhatsApp
+            </button>
+            <button class="share-btn facebook" onclick="shareToFacebook()">
+              <span class="share-icon">📘</span>
+              Facebook
+            </button>
+            <button class="share-btn twitter" onclick="shareToTwitter()">
+              <span class="share-icon">🐦</span>
+              Twitter
+            </button>
+            <button class="share-btn linkedin" onclick="shareToLinkedIn()">
+              <span class="share-icon">💼</span>
+              LinkedIn
+            </button>
+            <button class="share-btn copy-link" onclick="copyGameLink()">
+              <span class="share-icon">🔗</span>
+              Copiar enlace
+            </button>
+          </div>
+        </div>
+
+        <!-- Donation Section -->
+        <div class="footer-donate">
+          <h4>☕ Apoya el proyecto</h4>
+          <p>Si te gustó el juego, puedes hacer una donación:</p>
+          <div class="donation-info">
+            <div class="donation-details">
+              <strong>Mercado Pago:</strong><br />
+              <span class="alias">Alias: ZionCode</span><br />
+              <span class="recipient"
+                >A nombre de: Cristian José Bordón Flores</span
+              >
+            </div>
+            <div class="donation-reward">
+              <p class="reward-text">
+                🎁 <strong>Envía el comprobante por email y recibe:</strong
+                ><br />
+                • eBook CSS Intermedio<br />
+                • eBook JavaScript Básico
+              </p>
+              <button class="donate-btn" onclick="openEmailForDonation()">
+                <span class="donate-icon">📧</span>
+                Enviar comprobante
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+          <small
+            >Hecho con ❤️ para aprender. Guarda automático usando
+            <code>localStorage</code>.</small
+          >
+        </div>
+      </div>
+    </footer>
+
+    <!-- Panel de Guías -->
+    <div id="help-panel" class="help-panel">
+      <div class="help-header">
+        <h2>📚 Guía de Fundamentos</h2>
+        <button id="close-help" class="btn-close" type="button">✕</button>
+      </div>
+      <div class="help-content">
+        <div id="help-body" class="help-body"></div>
+      </div>
+    </div>
+    <div id="help-overlay" class="help-overlay"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
