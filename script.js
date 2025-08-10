@@ -685,7 +685,7 @@ const levelHelpMap = {
 };
 
 const categories = {
-  html: {
+  htmlBasico: {
     name: "HTML Básico",
     color: "#e34c26",
     icon: "🏗️",
@@ -711,7 +711,7 @@ const categories = {
           /<img[^>]*alt=['"][^'"]+['"][^>]*>/i.test(code),
       },
       {
-        title: "Navegación",
+        title: "Navegación básica",
         instructions:
           "Crea un enlace (<a>) que apunte a https://example.com y que tenga texto visible.",
         goals: ["Crear un enlace con href", "Texto visible en el enlace"],
@@ -732,69 +732,305 @@ const categories = {
           (code.match(/<li\b/gi) || []).length >= 3,
       },
       {
-        title: "Formulario simple",
+        title: "Párrafos y saltos",
         instructions:
-          'Crea un formulario con un <input> (name) y un <button type="submit">.',
-        goals: ["input con atributo name", "submit button"],
+          "Crea 2 párrafos y usa <br> para hacer un salto de línea dentro de uno de ellos.",
+        goals: ["2 elementos <p>", "Usar <br> dentro de un párrafo"],
         initialCode: "",
         validate: (code) =>
-          /<input[^>]*name=['"][^'"]+['"][^>]*>/i.test(code) &&
+          (code.match(/<p\b/gi) || []).length >= 2 && /<br\s*\/?>/i.test(code),
+      },
+      {
+        title: "Texto con formato",
+        instructions:
+          "Usa <strong>, <em> y <u> para dar formato a diferentes palabras.",
+        goals: ["Usar <strong>", "Usar <em>", "Usar <u>"],
+        initialCode: "<p>Aquí tienes texto para formatear</p>",
+        validate: (code) =>
+          /<strong\b/i.test(code) && /<em\b/i.test(code) && /<u\b/i.test(code),
+      },
+      {
+        title: "Encabezados jerárquicos",
+        instructions:
+          "Crea una jerarquía de encabezados usando h1, h2, h3 y h4.",
+        goals: ["Usar h1", "Usar h2", "Usar h3", "Usar h4"],
+        initialCode: "",
+        validate: (code) =>
+          /<h1\b/i.test(code) &&
+          /<h2\b/i.test(code) &&
+          /<h3\b/i.test(code) &&
+          /<h4\b/i.test(code),
+      },
+      {
+        title: "División de contenido",
+        instructions:
+          "Usa <div> para crear 2 secciones diferentes con contenido.",
+        goals: ["Al menos 2 elementos <div>", "Contenido dentro de cada div"],
+        initialCode: "",
+        validate: (code) => {
+          const divs = code.match(/<div[^>]*>[\s\S]*?<\/div>/gi) || [];
+          return (
+            divs.length >= 2 &&
+            divs.every(
+              (div) => div.replace(/<\/?div[^>]*>/gi, "").trim().length > 0
+            )
+          );
+        },
+      },
+    ],
+  },
+
+  htmlIntermedio: {
+    name: "HTML Intermedio",
+    color: "#ff6b35",
+    icon: "🏘️",
+    levels: [
+      {
+        title: "Formulario completo",
+        instructions:
+          "Crea un formulario con input text, email, password y un botón submit.",
+        goals: [
+          "input type='text'",
+          "input type='email'",
+          "input type='password'",
+          "button submit",
+        ],
+        initialCode: "",
+        validate: (code) =>
+          /<input[^>]*type=['"]text['"][^>]*>/i.test(code) &&
+          /<input[^>]*type=['"]email['"][^>]*>/i.test(code) &&
+          /<input[^>]*type=['"]password['"][^>]*>/i.test(code) &&
           /<button[^>]*type=['"]?submit['"]?[^>]*>/i.test(code),
       },
       {
-        title: "Tabla básica",
+        title: "Tabla con datos",
         instructions:
-          "Crea una tabla con <table>, <tr>, <th> y <td>. Al menos 2 filas y 2 columnas.",
-        goals: ["Usar <table>", "Al menos 2 <tr>", "Usar <th> y <td>"],
+          "Crea una tabla con <thead>, <tbody>, al menos 3 filas de datos y 3 columnas.",
+        goals: [
+          "Usar <thead>",
+          "Usar <tbody>",
+          "Al menos 3 <tr> en tbody",
+          "Al menos 3 <th>",
+        ],
+        initialCode: "",
+        validate: (code) => {
+          const hasTheadTbody =
+            /<thead\b/i.test(code) && /<tbody\b/i.test(code);
+          const tbodyContent = code.match(/<tbody[^>]*>([\s\S]*?)<\/tbody>/i);
+          const rowsInTbody = tbodyContent
+            ? (tbodyContent[1].match(/<tr\b/gi) || []).length
+            : 0;
+          const hasHeaders = (code.match(/<th\b/gi) || []).length >= 3;
+          return hasTheadTbody && rowsInTbody >= 3 && hasHeaders;
+        },
+      },
+      {
+        title: "Lista ordenada y anidada",
+        instructions:
+          "Crea una lista ordenada (<ol>) que contenga una lista desordenada anidada.",
+        goals: ["Usar <ol>", "Usar <ul> dentro de <ol>", "Al menos 2 niveles"],
+        initialCode: "",
+        validate: (code) => {
+          const hasOl = /<ol\b/i.test(code);
+          const hasNestedUl = /<ol[^>]*>[\s\S]*<ul\b[\s\S]*<\/ol>/i.test(code);
+          return hasOl && hasNestedUl;
+        },
+      },
+      {
+        title: "Elementos multimedia",
+        instructions:
+          "Incluye una imagen, un video con controles y un audio con controles.",
+        goals: [
+          "Elemento <img>",
+          "Elemento <video> con controls",
+          "Elemento <audio> con controls",
+        ],
         initialCode: "",
         validate: (code) =>
-          /<table[^>]*>/i.test(code) &&
-          (code.match(/<tr\b/gi) || []).length >= 2 &&
-          /<th\b/i.test(code) &&
-          /<td\b/i.test(code),
+          /<img\b/i.test(code) &&
+          /<video[^>]*controls[^>]*>/i.test(code) &&
+          /<audio[^>]*controls[^>]*>/i.test(code),
       },
       {
         title: "Estructura semántica",
         instructions:
-          "Usa etiquetas semánticas: <header>, <main>, <section> y <footer>.",
+          "Usa <header>, <nav>, <main>, <section>, <article>, <aside> y <footer>.",
         goals: [
-          "Usar <header>",
-          "Usar <main>",
-          "Usar <section>",
-          "Usar <footer>",
+          "<header>",
+          "<nav>",
+          "<main>",
+          "<section>",
+          "<article>",
+          "<aside>",
+          "<footer>",
         ],
         initialCode: "",
         validate: (code) =>
           /<header\b/i.test(code) &&
+          /<nav\b/i.test(code) &&
           /<main\b/i.test(code) &&
           /<section\b/i.test(code) &&
+          /<article\b/i.test(code) &&
+          /<aside\b/i.test(code) &&
           /<footer\b/i.test(code),
       },
       {
-        title: "Atributos avanzados",
-        instructions: "Crea un input con placeholder, required y type='email'.",
+        title: "Formulario con validación",
+        instructions:
+          "Crea inputs con required, placeholder, min/max y pattern.",
         goals: [
-          "input type='email'",
-          "atributo placeholder",
-          "atributo required",
+          "input con required",
+          "input con placeholder",
+          "input con min o max",
+          "input con pattern",
         ],
         initialCode: "",
         validate: (code) =>
-          /<input[^>]*type=['"]email['"][^>]*>/i.test(code) &&
-          /<input[^>]*placeholder=/i.test(code) &&
-          /<input[^>]*required/i.test(code),
+          /<input[^>]*required[^>]*>/i.test(code) &&
+          /<input[^>]*placeholder[^>]*>/i.test(code) &&
+          (/<input[^>]*min[^>]*>/i.test(code) ||
+            /<input[^>]*max[^>]*>/i.test(code)) &&
+          /<input[^>]*pattern[^>]*>/i.test(code),
+      },
+      {
+        title: "Enlaces avanzados",
+        instructions:
+          "Crea enlaces que abran en nueva pestaña, un enlace de email y uno de teléfono.",
+        goals: ["target='_blank'", "href='mailto:'", "href='tel:'"],
+        initialCode: "",
+        validate: (code) =>
+          /<a[^>]*target=['"]_blank['"][^>]*>/i.test(code) &&
+          /<a[^>]*href=['"]mailto:[^'"]+['"][^>]*>/i.test(code) &&
+          /<a[^>]*href=['"]tel:[^'"]+['"][^>]*>/i.test(code),
+      },
+      {
+        title: "Metadatos y SEO",
+        instructions:
+          "Incluye <meta> tags para description, keywords y viewport.",
+        goals: ["meta description", "meta keywords", "meta viewport"],
+        initialCode:
+          "<!DOCTYPE html>\n<html>\n<head>\n\n</head>\n<body>\n<h1>Mi página</h1>\n</body>\n</html>",
+        validate: (code) =>
+          /<meta[^>]*name=['"]description['"][^>]*>/i.test(code) &&
+          /<meta[^>]*name=['"]keywords['"][^>]*>/i.test(code) &&
+          /<meta[^>]*name=['"]viewport['"][^>]*>/i.test(code),
       },
     ],
   },
-  css: {
-    name: "CSS Estilos",
+
+  htmlAvanzado: {
+    name: "HTML Avanzado",
+    color: "#d63384",
+    icon: "🏙️",
+    levels: [
+      {
+        title: "Formulario con fieldset",
+        instructions:
+          "Crea un formulario usando <fieldset>, <legend>, <label> y diferentes tipos de input.",
+        goals: [
+          "Usar <fieldset>",
+          "Usar <legend>",
+          "Usar <label>",
+          "Al menos 3 tipos de input",
+        ],
+        initialCode: "",
+        validate: (code) => {
+          const hasFieldset = /<fieldset\b/i.test(code);
+          const hasLegend = /<legend\b/i.test(code);
+          const hasLabel = /<label\b/i.test(code);
+          const inputTypes = (code.match(/type=['"][^'"]+['"]/gi) || []).length;
+          return hasFieldset && hasLegend && hasLabel && inputTypes >= 3;
+        },
+      },
+      {
+        title: "Elementos interactivos",
+        instructions: "Usa <details>, <summary>, <dialog> y <progress>.",
+        goals: ["<details> con <summary>", "<dialog>", "<progress>"],
+        initialCode: "",
+        validate: (code) =>
+          /<details\b/i.test(code) &&
+          /<summary\b/i.test(code) &&
+          /<dialog\b/i.test(code) &&
+          /<progress\b/i.test(code),
+      },
+      {
+        title: "Microdata y Schema",
+        instructions:
+          "Usa atributos itemscope, itemtype e itemprop para marcar datos estructurados.",
+        goals: ["itemscope", "itemtype", "itemprop"],
+        initialCode:
+          "<div>\n  <h1>Restaurante El Buen Sabor</h1>\n  <p>Dirección: Calle Principal 123</p>\n  <p>Teléfono: +1234567890</p>\n</div>",
+        validate: (code) =>
+          /itemscope/i.test(code) &&
+          /itemtype/i.test(code) &&
+          /itemprop/i.test(code),
+      },
+      {
+        title: "Canvas básico",
+        instructions:
+          "Crea un elemento <canvas> con id y dimensiones específicas.",
+        goals: ["<canvas> con id", "width y height definidos"],
+        initialCode: "",
+        validate: (code) =>
+          /<canvas[^>]*id=['"][^'"]+['"][^>]*>/i.test(code) &&
+          /<canvas[^>]*width[^>]*>/i.test(code) &&
+          /<canvas[^>]*height[^>]*>/i.test(code),
+      },
+      {
+        title: "Elementos de tiempo",
+        instructions: "Usa <time> con datetime para marcar fechas y horarios.",
+        goals: ["<time> con datetime", "Contenido legible"],
+        initialCode: "<p>El evento será el próximo viernes a las 3 PM</p>",
+        validate: (code) =>
+          /<time[^>]*datetime=['"][^'"]+['"][^>]*>[\s\S]*?<\/time>/i.test(code),
+      },
+      {
+        title: "Atributos ARIA",
+        instructions:
+          "Usa atributos ARIA como aria-label, aria-describedby y role.",
+        goals: ["aria-label", "aria-describedby", "role"],
+        initialCode:
+          '<button>Enviar</button>\n<input type="text">\n<div>Información adicional</div>',
+        validate: (code) =>
+          /aria-label/i.test(code) &&
+          /aria-describedby/i.test(code) &&
+          /role=/i.test(code),
+      },
+      {
+        title: "Elementos de cita",
+        instructions: "Usa <blockquote>, <cite>, <q> y <abbr> correctamente.",
+        goals: ["<blockquote>", "<cite>", "<q>", "<abbr>"],
+        initialCode: "",
+        validate: (code) =>
+          /<blockquote\b/i.test(code) &&
+          /<cite\b/i.test(code) &&
+          /<q\b/i.test(code) &&
+          /<abbr\b/i.test(code),
+      },
+      {
+        title: "Tablas complejas",
+        instructions:
+          "Crea una tabla con <caption>, <colgroup>, <col>, rowspan y colspan.",
+        goals: ["<caption>", "<colgroup>", "rowspan", "colspan"],
+        initialCode: "",
+        validate: (code) =>
+          /<caption\b/i.test(code) &&
+          /<colgroup\b/i.test(code) &&
+          /rowspan=/i.test(code) &&
+          /colspan=/i.test(code),
+      },
+    ],
+  },
+
+  cssBasico: {
+    name: "CSS Básico",
     color: "#1572b6",
     icon: "🎨",
     levels: [
       {
         title: "Color en el título",
         instructions:
-          "Dale color rojo al <h1> usando una etiqueta <style> en el propio HTML o un atributo style.",
+          "Dale color rojo al <h1> usando una etiqueta <style> en el propio HTML.",
         goals: ["Cambiar color del h1 a rojo"],
         initialCode: "<h1>Hola Mundo</h1>\n<style>\n\n</style>",
         validate: (code) =>
@@ -806,126 +1042,392 @@ const categories = {
           ),
       },
       {
-        title: "Box model",
+        title: "Tamaños de fuente",
         instructions:
-          "Crea un div con clase .caja y dale padding y border usando <style> interno.",
-        goals: [
-          "Contener .caja",
-          "Tener reglas CSS para .caja con padding y border",
-        ],
+          "Cambia el font-size de diferentes elementos usando px, em y rem.",
+        goals: ["font-size en px", "font-size en em", "font-size en rem"],
+        initialCode:
+          "<h1>Título</h1>\n<p>Párrafo</p>\n<span>Texto pequeño</span>\n<style>\n\n</style>",
+        validate: (code) =>
+          /font-size\s*:\s*\d+px/i.test(code) &&
+          /font-size\s*:\s*[\d.]+em/i.test(code) &&
+          /font-size\s*:\s*[\d.]+rem/i.test(code),
+      },
+      {
+        title: "Box model básico",
+        instructions: "Aplica margin, padding y border a un elemento.",
+        goals: ["margin definido", "padding definido", "border definido"],
         initialCode: '<div class="caja">Mi caja</div>\n<style>\n\n</style>',
-        validate: (code) => {
-          const hasClass = /class\s*=\s*["'][^"']*caja[^"']*["']/i.test(code);
-          const hasPadding = /\.caja[^{}]*\{[^{}]*padding\s*:[^;}]+/i.test(
-            code
-          );
-          const hasBorder = /\.caja[^{}]*\{[^{}]*border\s*:[^;}]+/i.test(code);
-          return hasClass && hasPadding && hasBorder;
-        },
+        validate: (code) =>
+          /margin\s*:/i.test(code) &&
+          /padding\s*:/i.test(code) &&
+          /border\s*:/i.test(code),
       },
       {
-        title: "Flexbox básico",
+        title: "Colores y fondos",
         instructions:
-          "Usa display:flex en un contenedor para alinear 3 cajas horizontalmente.",
-        goals: ["Contenedor con display:flex", "3 elementos hijos visibles"],
+          "Usa color, background-color y background-image en diferentes elementos.",
+        goals: ["color definido", "background-color", "background-image"],
         initialCode:
-          '<div class="container">\n  <div>Caja 1</div>\n  <div>Caja 2</div>\n  <div>Caja 3</div>\n</div>\n<style>\n\n</style>',
-        validate: (code) => {
-          const hasFlex = /display\s*:\s*flex/i.test(code);
-          const divCount = (code.match(/<div[^>]*>/gi) || []).length;
-          return hasFlex && divCount >= 4; // container + 3 hijos
-        },
+          '<div class="header">Header</div>\n<p class="texto">Texto</p>\n<style>\n\n</style>',
+        validate: (code) =>
+          /color\s*:/i.test(code) &&
+          /background-color\s*:/i.test(code) &&
+          /background-image\s*:/i.test(code),
       },
       {
-        title: "Grid básico",
-        instructions: "Crea un grid de 2 columnas y coloca 4 elementos dentro.",
-        goals: ["display:grid con 2 columnas", "4 hijos dentro del grid"],
+        title: "Texto y tipografía",
+        instructions:
+          "Aplica font-family, font-weight, text-align y text-decoration.",
+        goals: ["font-family", "font-weight", "text-align", "text-decoration"],
         initialCode:
-          '<div class="grid">\n  <div>Item 1</div>\n  <div>Item 2</div>\n  <div>Item 3</div>\n  <div>Item 4</div>\n</div>\n<style>\n\n</style>',
-        validate: (code) => {
-          const hasGrid = /display\s*:\s*grid/i.test(code);
-          const hasTwoColumns =
-            /grid-template-columns\s*:\s*[^;]*(repeat\s*\(\s*2\s*,|1fr\s+1fr|50%\s+50%)/i.test(
-              code
-            );
-          return hasGrid && hasTwoColumns;
-        },
+          '<h1>Título principal</h1>\n<p>Párrafo de ejemplo</p>\n<a href="#">Enlace</a>\n<style>\n\n</style>',
+        validate: (code) =>
+          /font-family\s*:/i.test(code) &&
+          /font-weight\s*:/i.test(code) &&
+          /text-align\s*:/i.test(code) &&
+          /text-decoration\s*:/i.test(code),
       },
       {
-        title: "Pseudo-clases",
-        instructions:
-          "Añade una regla :hover para <button> que cambie su background o color.",
-        goals: ["Regla :hover para button"],
-        initialCode: "<button>Hover me!</button>\n<style>\n\n</style>",
-        validate: (code) => /button\s*:\s*hover|button:hover/i.test(code),
-      },
-      {
-        title: "Transiciones",
-        instructions:
-          "Aplica una transición para que el cambio en :hover sea suave (transition en button).",
-        goals: ["Tener transition en button", "Efecto en :hover"],
-        initialCode: "<button>Smooth hover!</button>\n<style>\n\n</style>",
-        validate: (code) => {
-          const hasTransition =
-            /button[^{}]*\{[^{}]*transition\s*:[^;}]+/i.test(code);
-          const hasHover = /button\s*:\s*hover|button:hover/i.test(code);
-          return hasTransition && hasHover;
-        },
-      },
-      {
-        title: "Responsive simple",
-        instructions:
-          "Añade una regla @media para que .grid tenga 1 columna en pantallas pequeñas.",
-        goals: ["@media con grid a 1 columna"],
+        title: "Selectores básicos",
+        instructions: "Usa selectores de elemento, clase, ID y descendiente.",
+        goals: [
+          "selector de elemento",
+          "selector de clase",
+          "selector de ID",
+          "selector descendiente",
+        ],
         initialCode:
-          '<div class="grid">\n  <div>Item 1</div>\n  <div>Item 2</div>\n</div>\n<style>\n.grid { display: grid; grid-template-columns: 1fr 1fr; }\n\n</style>',
+          '<div id="container">\n  <h1 class="titulo">Título</h1>\n  <p>Párrafo dentro del container</p>\n</div>\n<style>\n\n</style>',
         validate: (code) => {
-          const hasMedia = /@media[^{]*\{/i.test(code);
-          const hasOneColumn = /grid-template-columns\s*:\s*(1fr|100%)/i.test(
-            code
-          );
-          return hasMedia && hasOneColumn;
+          const hasElement = /^[a-z]+\s*\{/im.test(code);
+          const hasClass = /\.[a-z-_]+\s*\{/i.test(code);
+          const hasId = /#[a-z-_]+\s*\{/i.test(code);
+          const hasDescendant =
+            /[a-z#.][a-z-_#.]*\s+[a-z#.][a-z-_#.]*\s*\{/i.test(code);
+          return hasElement && hasClass && hasId && hasDescendant;
         },
       },
       {
-        title: "Animación CSS",
+        title: "Display básico",
+        instructions: "Usa display: block, inline, inline-block y none.",
+        goals: [
+          "display: block",
+          "display: inline",
+          "display: inline-block",
+          "display: none",
+        ],
+        initialCode:
+          '<span class="bloque">Span como bloque</span>\n<div class="linea">Div como inline</div>\n<p class="inline-block">Párrafo inline-block</p>\n<div class="oculto">Elemento oculto</div>\n<style>\n\n</style>',
+        validate: (code) =>
+          /display\s*:\s*block/i.test(code) &&
+          /display\s*:\s*inline/i.test(code) &&
+          /display\s*:\s*inline-block/i.test(code) &&
+          /display\s*:\s*none/i.test(code),
+      },
+      {
+        title: "Listas y enlaces",
         instructions:
-          "Crea una animación CSS llamada 'flotar' y aplícala a .item.",
-        goals: ["@keyframes flotar", "usar animation en .item"],
-        initialCode: '<div class="item">Anímame!</div>\n<style>\n\n</style>',
+          "Estiliza una lista quitando bullets y cambia el color de enlaces en hover.",
+        goals: [
+          "list-style: none",
+          "color en a:hover",
+          "text-decoration en enlaces",
+        ],
+        initialCode:
+          '<ul>\n  <li><a href="#">Enlace 1</a></li>\n  <li><a href="#">Enlace 2</a></li>\n  <li><a href="#">Enlace 3</a></li>\n</ul>\n<style>\n\n</style>',
+        validate: (code) =>
+          /list-style\s*:\s*none/i.test(code) &&
+          /a\s*:\s*hover[\s\S]*?color\s*:/i.test(code) &&
+          /text-decoration\s*:/i.test(code),
+      },
+    ],
+  },
+
+  cssIntermedio: {
+    name: "CSS Intermedio",
+    color: "#0d6efd",
+    icon: "🎭",
+    levels: [
+      {
+        title: "Flexbox completo",
+        instructions:
+          "Usa flexbox con justify-content, align-items, flex-direction y flex-wrap.",
+        goals: [
+          "display: flex",
+          "justify-content",
+          "align-items",
+          "flex-direction",
+          "flex-wrap",
+        ],
+        initialCode:
+          '<div class="container">\n  <div class="item">1</div>\n  <div class="item">2</div>\n  <div class="item">3</div>\n  <div class="item">4</div>\n</div>\n<style>\n\n</style>',
+        validate: (code) =>
+          /display\s*:\s*flex/i.test(code) &&
+          /justify-content\s*:/i.test(code) &&
+          /align-items\s*:/i.test(code) &&
+          /flex-direction\s*:/i.test(code) &&
+          /flex-wrap\s*:/i.test(code),
+      },
+      {
+        title: "Grid Layout",
+        instructions:
+          "Crea un grid con grid-template-columns, grid-template-rows y grid-gap.",
+        goals: [
+          "display: grid",
+          "grid-template-columns",
+          "grid-template-rows",
+          "grid-gap o gap",
+        ],
+        initialCode:
+          '<div class="grid">\n  <div>1</div>\n  <div>2</div>\n  <div>3</div>\n  <div>4</div>\n  <div>5</div>\n  <div>6</div>\n</div>\n<style>\n\n</style>',
+        validate: (code) =>
+          /display\s*:\s*grid/i.test(code) &&
+          /grid-template-columns\s*:/i.test(code) &&
+          /grid-template-rows\s*:/i.test(code) &&
+          /(grid-gap|gap)\s*:/i.test(code),
+      },
+      {
+        title: "Posicionamiento avanzado",
+        instructions: "Usa position: relative, absolute, fixed y sticky.",
+        goals: [
+          "position: relative",
+          "position: absolute",
+          "position: fixed",
+          "position: sticky",
+        ],
+        initialCode:
+          '<div class="container">\n  <div class="relative">Relative</div>\n  <div class="absolute">Absolute</div>\n  <div class="fixed">Fixed</div>\n  <div class="sticky">Sticky</div>\n</div>\n<style>\n\n</style>',
+        validate: (code) =>
+          /position\s*:\s*relative/i.test(code) &&
+          /position\s*:\s*absolute/i.test(code) &&
+          /position\s*:\s*fixed/i.test(code) &&
+          /position\s*:\s*sticky/i.test(code),
+      },
+      {
+        title: "Pseudo-clases avanzadas",
+        instructions: "Usa :nth-child(), :first-child, :last-child y :not().",
+        goals: [":nth-child()", ":first-child", ":last-child", ":not()"],
+        initialCode:
+          "<ul>\n  <li>Item 1</li>\n  <li>Item 2</li>\n  <li>Item 3</li>\n  <li>Item 4</li>\n  <li>Item 5</li>\n</ul>\n<style>\n\n</style>",
+        validate: (code) =>
+          /:nth-child\s*\(/i.test(code) &&
+          /:first-child/i.test(code) &&
+          /:last-child/i.test(code) &&
+          /:not\s*\(/i.test(code),
+      },
+      {
+        title: "Transiciones y transformaciones",
+        instructions:
+          "Aplica transition, transform con scale, rotate y translate.",
+        goals: [
+          "transition",
+          "transform: scale",
+          "transform: rotate",
+          "transform: translate",
+        ],
+        initialCode:
+          '<div class="box">Hover me!</div>\n<style>\n.box {\n  width: 100px;\n  height: 100px;\n  background: blue;\n  margin: 50px;\n}\n\n</style>',
+        validate: (code) =>
+          /transition\s*:/i.test(code) &&
+          /transform\s*:[\s\S]*scale/i.test(code) &&
+          /transform\s*:[\s\S]*rotate/i.test(code) &&
+          /transform\s*:[\s\S]*translate/i.test(code),
+      },
+      {
+        title: "Media Queries",
+        instructions:
+          "Crea responsive design con @media para móvil, tablet y desktop.",
+        goals: [
+          "@media (max-width: 768px)",
+          "@media (min-width: 769px)",
+          "@media (min-width: 1024px)",
+        ],
+        initialCode:
+          '<div class="responsive">Contenido responsive</div>\n<style>\n.responsive {\n  background: red;\n  padding: 20px;\n}\n\n</style>',
         validate: (code) => {
-          const hasKeyframes = /@keyframes\s+flotar/i.test(code);
-          const hasAnimation = /\.item[^{}]*\{[^{}]*animation\s*:[^;}]+/i.test(
-            code
-          );
-          return hasKeyframes && hasAnimation;
+          const hasSmall = /@media[^{]*max-width\s*:\s*768px/i.test(code);
+          const hasMedium = /@media[^{]*min-width\s*:\s*769px/i.test(code);
+          const hasLarge = /@media[^{]*min-width\s*:\s*1024px/i.test(code);
+          return hasSmall && hasMedium && hasLarge;
         },
       },
       {
         title: "Variables CSS",
         instructions:
-          "Define variables CSS (--color-primary) y úsalas en un elemento.",
-        goals: [
-          "Definir variable --color-primary",
-          "Usar var(--color-primary)",
-        ],
+          "Define variables CSS en :root y úsalas en diferentes elementos.",
+        goals: [":root con variables", "var() en al menos 3 propiedades"],
         initialCode:
-          '<div class="card">Card con variables</div>\n<style>\n\n</style>',
-        validate: (code) =>
-          /--[a-zA-Z-]+\s*:/i.test(code) &&
-          /var\s*\(\s*--[a-zA-Z-]+\s*\)/i.test(code),
+          '<div class="card">\n  <h2>Título</h2>\n  <p>Contenido</p>\n  <button>Botón</button>\n</div>\n<style>\n\n</style>',
+        validate: (code) => {
+          const hasRoot = /:root\s*\{[\s\S]*--[a-zA-Z-]+\s*:/i.test(code);
+          const varUsage = (code.match(/var\s*\(\s*--[a-zA-Z-]+\s*\)/gi) || [])
+            .length;
+          return hasRoot && varUsage >= 3;
+        },
       },
       {
-        title: "Posicionamiento",
-        instructions:
-          "Usa position: absolute para posicionar un elemento en la esquina superior derecha.",
-        goals: ["position: absolute", "top y right definidos"],
+        title: "Gradientes",
+        instructions: "Usa linear-gradient y radial-gradient en backgrounds.",
+        goals: ["linear-gradient", "radial-gradient"],
         initialCode:
-          '<div class="container">\n  <div class="badge">Badge</div>\n  <p>Contenido principal</p>\n</div>\n<style>\n\n</style>',
+          '<div class="linear">Linear gradient</div>\n<div class="radial">Radial gradient</div>\n<style>\n.linear, .radial {\n  width: 200px;\n  height: 100px;\n  margin: 10px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: white;\n}\n\n</style>',
         validate: (code) =>
-          /position\s*:\s*absolute/i.test(code) &&
-          /top\s*:/i.test(code) &&
-          /right\s*:/i.test(code),
+          /linear-gradient/i.test(code) && /radial-gradient/i.test(code),
+      },
+    ],
+  },
+
+  cssAvanzado: {
+    name: "CSS Avanzado",
+    color: "#6f42c1",
+    icon: "🎪",
+    levels: [
+      {
+        title: "Animaciones complejas",
+        instructions:
+          "Crea animaciones con @keyframes, animation-delay y animation-fill-mode.",
+        goals: [
+          "@keyframes",
+          "animation-delay",
+          "animation-fill-mode",
+          "animation-iteration-count",
+        ],
+        initialCode:
+          '<div class="animated-box">Animación compleja</div>\n<style>\n.animated-box {\n  width: 100px;\n  height: 100px;\n  background: purple;\n  margin: 50px;\n}\n\n</style>',
+        validate: (code) =>
+          /@keyframes/i.test(code) &&
+          /animation-delay\s*:/i.test(code) &&
+          /animation-fill-mode\s*:/i.test(code) &&
+          /animation-iteration-count\s*:/i.test(code),
+      },
+      {
+        title: "Grid avanzado",
+        instructions:
+          "Usa grid-template-areas, grid-area y grid con nombres de líneas.",
+        goals: [
+          "grid-template-areas",
+          "grid-area",
+          "nombres de líneas en grid",
+        ],
+        initialCode:
+          '<div class="grid-advanced">\n  <div class="header">Header</div>\n  <div class="sidebar">Sidebar</div>\n  <div class="content">Content</div>\n  <div class="footer">Footer</div>\n</div>\n<style>\n\n</style>',
+        validate: (code) =>
+          /grid-template-areas\s*:/i.test(code) &&
+          /grid-area\s*:/i.test(code) &&
+          /\[[a-zA-Z-]+\]/i.test(code),
+      },
+      {
+        title: "Pseudo-elementos",
+        instructions: "Usa ::before, ::after, ::first-letter y ::first-line.",
+        goals: ["::before", "::after", "::first-letter", "::first-line"],
+        initialCode:
+          '<p class="fancy">Este es un párrafo con pseudo-elementos. Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>\n<style>\n\n</style>',
+        validate: (code) =>
+          /::before/i.test(code) &&
+          /::after/i.test(code) &&
+          /::first-letter/i.test(code) &&
+          /::first-line/i.test(code),
+      },
+      {
+        title: "Filtros CSS",
+        instructions:
+          "Aplica filter con blur, brightness, contrast y saturate.",
+        goals: [
+          "filter: blur",
+          "filter: brightness",
+          "filter: contrast",
+          "filter: saturate",
+        ],
+        initialCode:
+          '<div class="image-container">\n  <img src="https://picsum.photos/200/150" alt="Imagen de prueba">\n</div>\n<style>\n\n</style>',
+        validate: (code) =>
+          /filter\s*:[\s\S]*blur/i.test(code) &&
+          /filter\s*:[\s\S]*brightness/i.test(code) &&
+          /filter\s*:[\s\S]*contrast/i.test(code) &&
+          /filter\s*:[\s\S]*saturate/i.test(code),
+      },
+      {
+        title: "Clipping y masking",
+        instructions: "Usa clip-path y mask para crear formas complejas.",
+        goals: ["clip-path", "mask o -webkit-mask"],
+        initialCode:
+          '<div class="clipped">Elemento con clip-path</div>\n<div class="masked">Elemento con mask</div>\n<style>\n.clipped, .masked {\n  width: 200px;\n  height: 100px;\n  background: linear-gradient(45deg, red, blue);\n  margin: 20px;\n}\n\n</style>',
+        validate: (code) =>
+          /clip-path\s*:/i.test(code) &&
+          /(mask\s*:|webkit-mask\s*:)/i.test(code),
+      },
+      {
+        title: "Funciones CSS avanzadas",
+        instructions:
+          "Usa calc(), clamp(), min(), max() y var() con fallbacks.",
+        goals: ["calc()", "clamp()", "min()", "max()", "var() con fallback"],
+        initialCode:
+          '<div class="responsive-box">Caja responsive</div>\n<style>\n\n</style>',
+        validate: (code) =>
+          /calc\s*\(/i.test(code) &&
+          /clamp\s*\(/i.test(code) &&
+          /min\s*\(/i.test(code) &&
+          /max\s*\(/i.test(code) &&
+          /var\s*\([^,)]+,/i.test(code),
+      },
+      {
+        title: "Layout con container queries",
+        instructions: "Implementa container queries y container-type.",
+        goals: ["@container", "container-type", "container-name"],
+        initialCode:
+          '<div class="main-container">\n  <div class="card">\n    <h3>Título</h3>\n    <p>Contenido que se adapta al contenedor</p>\n  </div>\n</div>\n<style>\n\n</style>',
+        validate: (code) =>
+          /@container/i.test(code) &&
+          /container-type\s*:/i.test(code) &&
+          /container-name\s*:/i.test(code),
+      },
+      {
+        title: "Scroll y viewport avanzado",
+        instructions:
+          "Usa scroll-behavior, scroll-snap y viewport units (vh, vw, vmin, vmax).",
+        goals: ["scroll-behavior", "scroll-snap", "vh/vw", "vmin/vmax"],
+        initialCode:
+          '<div class="scroll-container">\n  <div class="section">Sección 1</div>\n  <div class="section">Sección 2</div>\n  <div class="section">Sección 3</div>\n</div>\n<style>\n\n</style>',
+        validate: (code) =>
+          /scroll-behavior\s*:/i.test(code) &&
+          /scroll-snap/i.test(code) &&
+          /(vh|vw)/i.test(code) &&
+          /(vmin|vmax)/i.test(code),
+      },
+      {
+        title: "CSS moderno y futuro",
+        instructions:
+          "Usa aspect-ratio, gap en flexbox, y logical properties (margin-inline, padding-block).",
+        goals: [
+          "aspect-ratio",
+          "gap en flexbox",
+          "margin-inline",
+          "padding-block",
+        ],
+        initialCode:
+          '<div class="modern-layout">\n  <div class="item">Item 1</div>\n  <div class="item">Item 2</div>\n  <div class="item">Item 3</div>\n</div>\n<style>\n\n</style>',
+        validate: (code) =>
+          /aspect-ratio\s*:/i.test(code) &&
+          /gap\s*:[\s\S]*flex/i.test(code) &&
+          /margin-inline\s*:/i.test(code) &&
+          /padding-block\s*:/i.test(code),
+      },
+      {
+        title: "Efectos visuales avanzados",
+        instructions:
+          "Combina backdrop-filter, mix-blend-mode y transform-style: preserve-3d.",
+        goals: [
+          "backdrop-filter",
+          "mix-blend-mode",
+          "transform-style: preserve-3d",
+        ],
+        initialCode:
+          '<div class="glass-effect">\n  <div class="content">Contenido con efectos</div>\n  <div class="overlay">Overlay</div>\n</div>\n<style>\n\n</style>',
+        validate: (code) =>
+          /backdrop-filter\s*:/i.test(code) &&
+          /mix-blend-mode\s*:/i.test(code) &&
+          /transform-style\s*:\s*preserve-3d/i.test(code),
       },
     ],
   },
