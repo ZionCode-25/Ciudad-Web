@@ -2311,3 +2311,221 @@ function checkGameCompletion() {
 
 // Llamar a la verificación al cargar la página
 document.addEventListener("DOMContentLoaded", checkGameCompletion);
+  // Guías HTML Intermedio
+  "html-formulario-completo": {
+    title: "Formularios Completos",
+    content: `
+      <div class="help-section">
+        <h3>📋 Formularios Avanzados</h3>
+        <p>Los formularios recopilan diferentes tipos de información del usuario.</p>
+        
+        <h4>Tipos de input esenciales</h4>
+        <ul>
+          <li><code>type="text"</code> - Texto general</li>
+          <li><code>type="email"</code> - Direcciones de email</li>
+          <li><code>type="password"</code> - Contraseñas (oculta el texto)</li>
+        </ul>
+        
+        <h4>Ejemplo completo</h4>
+        <pre><code>&lt;form&gt;
+  &lt;input type="text" name="nombre" placeholder="Tu nombre"&gt;
+  &lt;input type="email" name="email" placeholder="tu@email.com"&gt;
+  &lt;input type="password" name="password" placeholder="Contraseña"&gt;
+  &lt;button type="submit"&gt;Enviar&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+        
+        <div class="help-tip">
+          <strong>Validación:</strong> Los navegadores validan automáticamente emails y campos requeridos.
+        </div>
+      </div>
+    `,
+  },
+
+  "html-tabla-datos": {
+    title: "Tablas con Datos",
+    content: `
+      <div class="help-section">
+        <h3>📊 Tablas Estructuradas</h3>
+        <p>Las tablas organizan datos en filas y columnas con estructura semántica.</p>
+        
+        <h4>Estructura completa</h4>
+        <pre><code>&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Nombre&lt;/th&gt;
+      &lt;th&gt;Edad&lt;/th&gt;
+      &lt;th&gt;Ciudad&lt;/th,   `,
+  }/div>
+     <  
+div>  </res.
+      adoTR en busca el Cipción mejoruena descrtrong> Una b>SEO:</song      <str
+    ">="help-tipclassiv  <d              
+
+ >       </ulgn</li>
+ sive desi de respon> - Controlstrongrt</g>viewpo  <li><stron    >
+    s</litevaneles clave r> - Palabraords</strongtrong>keywli><s
+          <queda</li>bústados de esulce en r - Apareg>ption</stronong>descri><str<li              <ul>
+ 4>
+   ada meta</h cito de<h4>Propós   
+      
+       ode></pre></ce=1"&gt;initial-scalidth, th=device-wntent="wid 
+      cort"wpoame="vie&lt;meta n3"&gt;
+
+brabra2, palalabra1, palapantent="
+      co" ords"keyweta name=;mgt;
+
+&ltina"& la págripción detent="Desc conn" 
+     iptioscrame="de&lt;meta n <pre><code>    es</h4>
+   sencial>Meta tags e        <h4
+        
+gina.</p>u pá ta entendersqueda otores de búores y m los navegadayudan ametadatos    <p>Los </h3>
+     tos HTMLetada    <h3>🔍 M  ion">
+  cthelp-ses="iv clas   <d  nt: `
+ ,
+    contetos y SEO"ada"Mettitle:     : {
+adatos-seo"  "html-met
+
+},   `,
+  v>
+ 
+      </di   </div>dad.
+     urior segde> para mayblank"</coet="_targde>on <cocode> cener"</l="noopUsa <code>rerong> ad:</stng>Segurid  <stro       
+ >lp-tip"v class="he        <di 
+    
+   pre>/code></;/a&gt;<
+&lthoraamar a Ll0"&gt;
+ +123456789el:="treft;a h>&l <pre><code
+       ono</h4> de teléf4>Enlace      <h 
+  
+       e></code></pr;/a&gt;il
+&ltemaEnviar gt;
+  "&como@ejemplo.:contact="mailtorefode>&lt;a h    <pre><ch4>
+    l</ainlace de em  <h4>E
+              ode></pre>
+</c
+&lt;/a&gt;stañaueva pe en n
+  Abrirgt;k"&"_blan=target.com" xamplehttps://e="e>&lt;a hrefe><cod   <pr>
+     a</h4pestañ en nueva aceEnl4> <h
+          >
+     as.</pintras pág a ovegarsolo nae  más qucer haden pueos enlaces        <p>L
+/h3>eciales<EspEnlaces 🔗 3>     <htion">
+   "help-secss=cla  <div `
+    ent: ont
+    cAvanzados",s e: "Enlacetitls": {
+    es-avanzadotml-enlac},
+
+  "h
+  div>
+    `,      </    </div>
+uario.
+    l usencia deperia exejora ly mantánea TML5 es instón Halidacia v/strong> Lng>UX:<       <stro">
+   "help-tiplass=v cdi    <     
+    
+   ode></pre></cgt;letras"&imo 3 Míner="ld    placeho{3,}" 
+   Za-z]ttern="[A- 
+       paype="text"put t;
+
+&lt;in"&gtdad (1-100)="Eaceholderpl
+       ired      requ" 
+  x="100
+       ma="1" 
+       min "number="t typenpude>&lt;i<pre><co     co</h4>
+   ácti>Ejemplo pr  <h4 
+            </ul>
+   >
+      </li regularión> - Expresn</code<code>patterli>     <
+     i>ximo</les mínimo/máde> - Valor>min/max</co  <li><code        li>
+ayuda</exto de e> - Tlder</codaceholi><code>pl   <       io</li>
+po obligatorCamd</code> - uire<code>req <li>    ul>
+     >
+        <ción</h4daalibutos de v>Atri  <h4    
+         ario.</p>
+  del usunciala experie mejorar tica paratomáción auluye validaML5 inc     <p>HTL5</h3>
+   ación HTM3>✅ Valid        <hn">
+help-sectiolass="<div c
+        content: `",
+  srmulariode Foción  "Validaitle: {
+    talidacion":o-vormulari"html-f
+
+      `,
+  },>
+iv</d      iv>
+
+        </dproducción.les de rea los controode> muestrls</c>controcodeo <El atribut> trongontroles:</s>C  <strong
+        elp-tip">lass="h  <div c     
+    e>
+     e></prdio&gt;</codlt;/auta audio.
+& soporador no  Tu naveg"&gt;
+dio/mpeg="auype3" to.mp"audi= srct;sources&gt;
+  &lcontrolo &lt;audipre><code>
+        <</h4>Audio <h4>   
+           >
+ ode></preideo&gt;</c;/v.
+&lt videorta no sopoavegador  Tu n/mp4"&gt;
+"video=pe.mp4" ty="videoource src&lt;s;
+  controls&gtlt;video ode>&<pre><c4>
+        Video</h   <h4>
+     e>
+        de></pr;</co"&gtncióscrip" alt="Degen.jpgmg src="ima>&lt;ie><code
+        <pragen</h4>Im       <h4>        
+ 
+.</p>video audio y ivos paras nate elementoTML5 incluy      <p>H</h3>
+  edia en HTML3>🎬 Multim <h   ion">
+    help-sectdiv class="  <
+     content: `",
+   imediaos Mult "Element
+    title:ia": {ultimedtos-ml-elemen,
+
+  "htm  `,
+  }>
+  
+      </div  </div>     ; padre.
+ gtt;li& &ldeln dentro nidadas vatas a Las lisong>trructura:</sg>Est     <stron">
+     "help-tipdiv class=
+        <         </ul>
+     </li>
+  ts)da (bulleta desordena> - Lisl&gt;</codee>&lt;uod      <li><c
+    )</li>númerosda (ta ordena/code> - List;ol&gt;<><code>&l   <li            <ul>
+
+   >tas</h4os de lisTip4>      <h 
+  re>
+       ode></p;/ol&gt;</ct;
+&lt&lt;/li&gmentoegundo ele&lt;li&gt;S/li&gt;
+  
+  &lt;ul&gt;;
+    &lt;/2&lt;/li&gtnto Sub-eleme&lt;li&gt;;
+      ;/li&gt 1&lttob-elemen&gt;Sult;li      &&lt;ul&gt;
+mento
+     elemerli&gt;Pri  &lt;
+e>&lt;ol&gt;re><cod      <p>
+  ada</h4a desorden con listordenadah4>Lista       <        
+  ías.</p>
+rarqu jerearpara ce otras dentro ds idar lista<p>Puedes an       </h3>
+ Anidadass  <h3>🔗 Lista">
+       on-sectielp"hss= cla    <div
+   content: `,
+   nidadas"stas Aitle: "Li": {
+    tnidadahtml-lista-a
+  " `,
+  },
+v>
+         </di  </ul>
+/li>
+      tos<eldas de da</code> - Ct;td&gt;&lli><code>  <   
+     i>ncabezado</lldas de eode> - Ce</ct;th&g&lt;e>   <li><cod      s</li>
+ dato con los de> - Cuerpoody&gt;</coode>&lt;tb      <li><c    a</li>
+la table ncabezado d - E/code>thead&gt;<e>&lt;cod       <li>< <ul>
+      </h4>
+    veentos cla<h4>Elem         
+ re>
+      ></p</code&gt;
+&lt;/table&gt;t;/tbody;
+  &l/tr&gt    &lt;lt;/td&gt;
+drid&t;td&gt;Ma;
+      &l;/td&gt;td&gt;25&lt   &lt&gt;
+   uan&lt;/td&gt;J;td  &lt    lt;tr&gt;
+y&gt;
+    &;tbod&gt;
+  &lt&lt;/theadr&gt;
+   &lt;/t&gt;
+   
