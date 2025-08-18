@@ -22,8 +22,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // Inicializar variables después de que levels esté disponible
   totalLevels = levels.length;
   currentLevel = parseInt(localStorage.getItem("cw_currentLevel")) || 0;
-  gameCompleted = localStorage.getItem("cw_gameCompleted") === "true" || currentLevel >= totalLevels;
-  
+  gameCompleted =
+    localStorage.getItem("cw_gameCompleted") === "true" ||
+    currentLevel >= totalLevels;
+
   levelTotalEl.textContent = totalLevels;
 
   // Inicializar CodeMirror
@@ -138,7 +140,8 @@ function renderPreview() {
   `;
 
   // Escribir el contenido en el iframe
-  const iframeDocument = preview.contentDocument || preview.contentWindow.document;
+  const iframeDocument =
+    preview.contentDocument || preview.contentWindow.document;
   iframeDocument.open();
   iframeDocument.write(iframeDoc);
   iframeDocument.close();
@@ -177,7 +180,8 @@ function checkLevel() {
       renderLevelList();
       highlightLevelList();
     } else {
-      messageEl.textContent = "❌ Aún no cumple los objetivos. Revisa las metas del nivel.";
+      messageEl.textContent =
+        "❌ Aún no cumple los objetivos. Revisa las metas del nivel.";
       messageEl.style.color = "#fb7185";
     }
   } catch (error) {
@@ -191,9 +195,12 @@ function showCompletion() {
   localStorage.setItem("cw_gameCompleted", "true");
 
   levelTitleEl.textContent = "🎉 ¡Has completado la Ciudad Web!";
-  levelInstrEl.textContent = "Todos los niveles superados. Puedes reiniciar o volver a repasar cualquier nivel que quieras.";
+  levelInstrEl.textContent =
+    "Todos los niveles superados. Puedes reiniciar o volver a repasar cualquier nivel que quieras.";
   levelGoalsEl.innerHTML = "";
-  cm.setValue("<!-- ¡Felicidades! -->\n<h1>Ciudad completada 🏆</h1>\n<p>Vuelve a practicar los niveles que quieras.</p>");
+  cm.setValue(
+    "<!-- ¡Felicidades! -->\n<h1>Ciudad completada 🏆</h1>\n<p>Vuelve a practicar los niveles que quieras.</p>"
+  );
   renderPreview();
   messageEl.textContent = "¡Juego completado!";
   messageEl.style.color = "#7dd3fc";
@@ -258,7 +265,8 @@ function highlightLevelList() {
   const items = levelListEl.querySelectorAll("li:not(.category-header)");
   items.forEach((item, i) => {
     item.style.fontWeight = i === currentLevel ? "bold" : "normal";
-    item.style.background = i === currentLevel ? "rgba(125, 211, 252, 0.1)" : "transparent";
+    item.style.background =
+      i === currentLevel ? "rgba(125, 211, 252, 0.1)" : "transparent";
   });
 }
 
@@ -274,7 +282,10 @@ function updateProgress() {
 }
 
 function checkGameCompletion() {
-  const totalLevels = Object.values(categories).reduce((sum, cat) => sum + cat.levels.length, 0);
+  const totalLevels = Object.values(categories).reduce(
+    (sum, cat) => sum + cat.levels.length,
+    0
+  );
   const completedLevels = Object.keys(localStorage).filter(
     (key) => key.startsWith("level-") && localStorage[key] === "completed"
   ).length;

@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://zioncode-25.github.io/Ciudad-Web/sitemap.xml
+
+# Optimización para motores de búsqueda
+# Permitir indexación completa del juego educativo

@@ -10,7 +10,7 @@ const helpBody = document.getElementById("help-body");
 function showHelp() {
   const helpKey = levelHelpMap[currentLevel];
   const guide = helpGuides[helpKey];
-  
+
   if (guide) {
     helpBody.innerHTML = `
       <h3>${guide.title}</h3>
@@ -46,31 +46,31 @@ function hideHelp() {
 
 // --- Funciones de compartir ---
 function showShareSection() {
-  const shareSection = document.getElementById('share-section');
+  const shareSection = document.getElementById("share-section");
   if (shareSection) {
-    shareSection.style.display = 'block';
-    shareSection.classList.add('show');
+    shareSection.style.display = "block";
+    shareSection.classList.add("show");
   }
 }
 
 function shareToWhatsApp() {
   const message = encodeURIComponent(
     "🎉 ¡Acabo de completar el juego 'Ciudad Web' de Zion Code! " +
-    "Aprendí HTML y CSS de forma divertida. " +
-    "¡Pruébalo tú también! 🏙️💻"
+      "Aprendí HTML y CSS de forma divertida. " +
+      "¡Pruébalo tú también! 🏙️💻"
   );
   const url = encodeURIComponent(window.location.href);
-  window.open(`https://wa.me/?text=${message} ${url}`, '_blank');
+  window.open(`https://wa.me/?text=${message} ${url}`, "_blank");
 }
 
 function shareToTwitter() {
   const text = encodeURIComponent(
     "🎉 ¡Completé 'Ciudad Web' de Zion Code! " +
-    "Aprendí HTML y CSS jugando. " +
-    "¡Pruébalo tú también!"
+      "Aprendí HTML y CSS jugando. " +
+      "¡Pruébalo tú también!"
   );
   const url = encodeURIComponent(window.location.href);
-  window.open(`https://twitter.com/share?text=${text}&url=${url}`, '_blank');
+  window.open(`https://twitter.com/share?text=${text}&url=${url}`, "_blank");
 }
 
 function shareToFacebook() {
@@ -78,33 +78,37 @@ function shareToFacebook() {
   const title = encodeURIComponent("Ciudad Web de Zion Code");
   const description = encodeURIComponent(
     "¡Completé el juego de Zion Code! " +
-    "Aprendí HTML y CSS construyendo mi propia ciudad web. " +
-    "¡Pruébalo tú también!"
+      "Aprendí HTML y CSS construyendo mi propia ciudad web. " +
+      "¡Pruébalo tú también!"
   );
   window.open(
     `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${title} - ${description}`,
-    '_blank'
+    "_blank"
   );
 }
 
 // --- Event listeners ---
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   // Botones de ayuda
   if (helpBtn) {
     helpBtn.addEventListener("click", showHelp);
   }
-  
+
   if (closeHelpBtn) {
     closeHelpBtn.addEventListener("click", hideHelp);
   }
-  
+
   if (helpOverlay) {
     helpOverlay.addEventListener("click", hideHelp);
   }
-  
+
   // Cerrar ayuda con ESC
-  document.addEventListener("keydown", function(e) {
-    if (e.key === "Escape" && helpPanel && helpPanel.classList.contains("active")) {
+  document.addEventListener("keydown", function (e) {
+    if (
+      e.key === "Escape" &&
+      helpPanel &&
+      helpPanel.classList.contains("active")
+    ) {
       hideHelp();
     }
   });

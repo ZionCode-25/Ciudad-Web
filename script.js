@@ -782,7 +782,7 @@ const levelHelpMap = {
   5: "html-texto-formato",
   6: "html-encabezados-jerarquicos",
   7: "html-division-contenido",
-  
+
   // HTML Intermedio (8-15)
   8: "html-formulario-completo",
   9: "html-tabla-datos",
@@ -792,7 +792,7 @@ const levelHelpMap = {
   13: "html-formulario-validacion",
   14: "html-enlaces-avanzados",
   15: "html-metadatos-seo",
-  
+
   // HTML Avanzado (16-23)
   16: "html-formulario-fieldset",
   17: "html-elementos-interactivos",
@@ -802,7 +802,7 @@ const levelHelpMap = {
   21: "html-atributos-aria",
   22: "html-elementos-cita",
   23: "html-tablas-complejas",
-  
+
   // CSS Básico (24-31)
   24: "css-color-en-el-titulo",
   25: "css-tamanos-fuente",
@@ -812,7 +812,7 @@ const levelHelpMap = {
   29: "css-selectores-basicos",
   30: "css-display-basico",
   31: "css-listas-enlaces",
-  
+
   // CSS Intermedio (32-39)
   32: "css-flexbox-completo",
   33: "css-grid-layout",
@@ -822,7 +822,7 @@ const levelHelpMap = {
   37: "css-media-queries",
   38: "css-variables-css",
   39: "css-gradientes",
-  
+
   // CSS Avanzado (40-47)
   40: "css-animaciones-complejas",
   41: "css-grid-avanzado",
@@ -1649,13 +1649,16 @@ function renderLevelList() {
       li.style.color = i === currentLevel ? "#E6EEF3" : "#7dd3fc";
       li.style.cursor = "pointer";
     } else {
-      // Lógica normal de progresión
-      li.style.color =
-        i < currentLevel
-          ? "#7dd3fc"
-          : i === currentLevel
-          ? "#E6EEF3"
-          : "#6b7280";
+      // Lógica normal de progresión con mejor feedback visual
+      if (i < currentLevel) {
+        li.classList.add("completed");
+        li.innerHTML += ` <span class="badge">✓</span>`;
+      } else if (i === currentLevel) {
+        li.classList.add("current");
+      } else {
+        li.style.color = "#6b7280";
+        li.style.cursor = "default";
+      }
       li.style.cursor = i <= currentLevel ? "pointer" : "default";
     }
 
@@ -1682,6 +1685,10 @@ let cm = CodeMirror(editorElement, {
   autoCloseTags: true,
   matchBrackets: true,
   tabSize: 2,
+  // Optimizaciones de performance
+  viewportMargin: 10, // Renderizar solo las líneas visibles + margen
+  scrollbarStyle: "native", // Usar scrollbar nativo para mejor performance
+  lineWrapping: true,
 });
 
 // cargar nivel
@@ -1872,69 +1879,108 @@ function renderPreview() {
   iframeDocument.close();
 }
 
+// Debounce utility para mejor performance
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// Función mejorada para mostrar mensajes
+function showMessage(text, type = "info") {
+  messageEl.textContent = text;
+  messageEl.className = `message ${type}`;
+
+  // Auto-limpiar mensajes después de 5 segundos (excepto errores)
+  if (type !== "error") {
+    setTimeout(() => {
+      if (messageEl.textContent === text) {
+        messageEl.textContent = "";
+        messageEl.className = "message";
+      }
+    }, 5000);
+  }
+}
+
 // comprobación del nivel actual
 function checkLevel() {
+  const checkBtn = document.getElementById("check-btn");
   const code = cm.getValue().trim();
 
   if (!code) {
-    messageEl.textContent = "❌ Escribe algo de código primero.";
-    messageEl.style.color = "#fb7185";
+    showMessage("❌ Escribe algo de código primero.", "error");
     return;
   }
 
+  // Mostrar estado de loading
+  checkBtn.classList.add("loading");
+  checkBtn.disabled = true;
+
   const validator = levels[currentLevel].validate;
-  try {
-    const ok = validator(code);
-    if (ok) {
-      messageEl.textContent = "✅ ¡Nivel completado!";
-      messageEl.style.color = "#4ade80";
 
-      if (currentLevel < totalLevels - 1) {
-        currentLevel++;
-        localStorage.setItem("cw_currentLevel", currentLevel);
-        setTimeout(() => {
-          loadLevel(currentLevel);
-        }, 900);
+  // Simular validación (para futuras validaciones complejas)
+  setTimeout(() => {
+    try {
+      const ok = validator(code);
+      if (ok) {
+        showMessage("✅ ¡Nivel completado! 🎉", "success");
+
+        if (currentLevel < totalLevels - 1) {
+          currentLevel++;
+          localStorage.setItem("cw_currentLevel", currentLevel);
+          setTimeout(() => {
+            loadLevel(currentLevel);
+          }, 900);
+        } else {
+          setTimeout(() => {
+            showCompletion();
+          }, 800);
+        }
+        renderLevelList();
+        highlightLevelList();
       } else {
-        setTimeout(() => {
-          showCompletion();
-        }, 800);
-      }
-      renderLevelList();
-      highlightLevelList();
-    } else {
-      let specificMessage = "❌ Aún no cumple los objetivos. ";
+        let specificMessage = "❌ Aún no cumple los objetivos. ";
 
-      const level = levels[currentLevel];
-      if (level.category === "html") {
-        if (level.title.includes("Primer ladrillo")) {
-          if (!/<h1/i.test(code)) specificMessage += "Falta la etiqueta <h1>.";
-          else if (!/<p/i.test(code))
-            specificMessage += "Falta la etiqueta <p>.";
-        } else if (level.title.includes("Imagen")) {
-          if (!/<img/i.test(code))
-            specificMessage += "Falta la etiqueta <img>.";
-          else if (!/alt=/i.test(code))
-            specificMessage += "La imagen necesita atributo alt.";
+        const level = levels[currentLevel];
+        if (level.category === "html") {
+          if (level.title.includes("Primer ladrillo")) {
+            if (!/<h1/i.test(code))
+              specificMessage += "Falta la etiqueta <h1>.";
+            else if (!/<p/i.test(code))
+              specificMessage += "Falta la etiqueta <p>.";
+          } else if (level.title.includes("Imagen")) {
+            if (!/<img/i.test(code))
+              specificMessage += "Falta la etiqueta <img>.";
+            else if (!/alt=/i.test(code))
+              specificMessage += "La imagen necesita atributo alt.";
+          }
+        } else if (level.category === "css") {
+          if (level.title.includes("Color")) {
+            specificMessage += "El <h1> debe tener color rojo.";
+          }
         }
-      } else if (level.category === "css") {
-        if (level.title.includes("Color")) {
-          specificMessage += "El <h1> debe tener color rojo.";
+
+        if (specificMessage === "❌ Aún no cumple los objetivos. ") {
+          specificMessage += "Revisa las instrucciones y prueba otra vez.";
         }
-      }
 
-      if (specificMessage === "❌ Aún no cumple los objetivos. ") {
-        specificMessage += "Revisa las instrucciones y prueba otra vez.";
+        showMessage(specificMessage, "error");
       }
-
-      messageEl.textContent = specificMessage;
-      messageEl.style.color = "#fb7185";
+    } catch (e) {
+      showMessage("⚠️ Error al validar: " + e.message, "error");
+      console.error("Validation error:", e);
     }
-  } catch (e) {
-    messageEl.textContent = "⚠️ Error al validar: " + e.message;
-    messageEl.style.color = "#fb7185";
-    console.error("Validation error:", e);
-  }
+
+    // Remover estado de loading
+    checkBtn.classList.remove("loading");
+    checkBtn.disabled = false;
+  }, 200);
 }
 
 // botones y controles
@@ -1960,13 +2006,13 @@ document.getElementById("reset-code-btn").addEventListener("click", () => {
 
 // autorun checkbox
 const autorun = document.getElementById("autorun");
+// Debounced render para mejor performance
+const debouncedRender = debounce(renderPreview, 300);
+
 let autorunTimer = null;
 cm.on("change", () => {
   if (autorun.checked) {
-    clearTimeout(autorunTimer);
-    autorunTimer = setTimeout(() => {
-      renderPreview();
-    }, 400);
+    debouncedRender();
   }
 });
 
